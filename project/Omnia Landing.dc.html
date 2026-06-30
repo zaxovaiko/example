@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+  body {
+    margin: 0;
+    background: #060708;
+    color: #f3f4f6;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; }
+  ::selection { background: rgba(111,231,166,.22); }
+  /* scrollbars — subtle, on-theme */
+  html { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.14) transparent; }
+  body::-webkit-scrollbar { width: 11px; }
+  body::-webkit-scrollbar-track { background: #070809; }
+  body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 980px; border: 3px solid #070809; }
+  body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.2); }
+  #omnia-root * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.14) transparent; }
+  #omnia-root ::-webkit-scrollbar { height: 8px; width: 8px; }
+  #omnia-root ::-webkit-scrollbar-track { background: transparent; }
+  #omnia-root ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 980px; }
+  #omnia-root ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.24); }
+  @keyframes omAurora { 0%,100% { opacity:.85; transform: translate(-50%,-50%) scale(1); } 50% { opacity:1; transform: translate(-50%,-50%) scale(1.06); } }
+  @keyframes omBlink { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
+  @keyframes omFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes omPulse { 0%,100% { opacity:.5; } 50% { opacity:1; } }
+  @keyframes omNudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+  @keyframes omRise { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: none; } }
+  @keyframes omMarqueeL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes omMarqueeR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <rect width="240" height="240" rx="52" fill="#0a0b0d"></rect>
+    <circle cx="120" cy="120" r="44" fill="none" stroke="#6fe7a6" stroke-width="13"></circle>
+    <circle cx="120" cy="120" r="9" fill="#6fe7a6"></circle>
+  </svg>
+</template>
+
+<div id="omnia-root" style="position:relative;overflow:hidden;width:100%">
+
+  <!-- ===================== NAV ===================== -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:18px;height:72px;padding:0 clamp(16px,4vw,40px)">
+    <a href="#top" style="display:flex;align-items:center;gap:9px;text-decoration:none;flex:none">
+      <span style="width:26px;height:26px;border-radius:8px;background:#0e0f12;border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:#f3f4f6;font:700 13px/1 'DM Sans',sans-serif">O</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.02em;color:#f5f6f8">Omnia</span>
+    </a>
+    <div style="display:none;align-items:center;gap:2px;padding:5px;border-radius:980px;border:1px solid rgba(255,255,255,.08);background:rgba(18,19,22,.6);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);font-size:14px;font-weight:500;color:#aeb3bb" data-navpill>
+      <a href="#code" style="text-decoration:none;color:inherit;padding:7px 15px;border-radius:980px" style-hover="background:rgba(255,255,255,.06);color:#f3f4f6">Platform</a>
+      <a href="#modules" style="text-decoration:none;color:inherit;padding:7px 15px;border-radius:980px" style-hover="background:rgba(255,255,255,.06);color:#f3f4f6">Modules</a>
+      <a href="#ai" style="text-decoration:none;color:inherit;padding:7px 15px;border-radius:980px" style-hover="background:rgba(255,255,255,.06);color:#f3f4f6">AI-native</a>
+      <a href="#pricing" style="text-decoration:none;color:inherit;padding:7px 15px;border-radius:980px" style-hover="background:rgba(255,255,255,.06);color:#f3f4f6">Pricing</a>
+      <a href="#docs" style="text-decoration:none;color:inherit;padding:7px 15px;border-radius:980px" style-hover="background:rgba(255,255,255,.06);color:#f3f4f6">Docs</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex:none">
+      <a href="#" style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:#c2c6cd;text-decoration:none" style-hover="color:#f3f4f6">
+        <svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor;display:block"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5 3.9-1.4 6.8-5.2 6.8-9.7C22 6.6 17.5 2 12 2z"></path></svg>
+        {{ stars }}
+      </a>
+      <a href="#start" style="display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 18px;border-radius:980px;background:#f3f4f6;color:#0a0b0d;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap" style-hover="background:#ffffff">Get started</a>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header id="top" style="position:relative;min-height:100svh;display:flex;flex-direction:column;padding:84px clamp(12px,2.4vw,28px) clamp(14px,2vw,26px)">
+    <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:clamp(560px,80vh,860px);border-radius:clamp(20px,2.4vw,30px);border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,#0b0c0f 0%,#08090b 100%);overflow:hidden">
+
+      <!-- aurora -->
+      <div style="position:absolute;top:42%;left:50%;width:min(1180px,118%);height:760px;transform:translate(-50%,-50%);pointer-events:none;background:radial-gradient(ellipse 40% 52% at 56% 42%, rgba(214,236,224,.20), transparent 64%), radial-gradient(ellipse 46% 46% at 42% 56%, rgba(111,231,166,.13), transparent 66%), radial-gradient(ellipse 30% 40% at 64% 64%, rgba(150,186,255,.08), transparent 70%);filter:blur(14px);animation:omAurora 11s ease-in-out infinite"></div>
+      <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 70% at 50% 50%, transparent 52%, rgba(6,7,8,.6) 100%)"></div>
+
+      <!-- floating data chips -->
+      <div style="position:absolute;top:clamp(22px,9%,86px);left:clamp(18px,5.5%,70px);z-index:5;display:flex;align-items:center;gap:11px;animation:omFloat 6s ease-in-out infinite">
+        <span style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:#cfd3d8"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block"><rect x="3" y="6" width="18" height="13" rx="2.5"></rect><path d="M3 10h18"></path><path d="M16.5 14.5h2"></path></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600;color:#e8eaed">Wallet</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6a6f76">double-entry ledger</span></span>
+      </div>
+      <div style="position:absolute;top:clamp(22px,11%,108px);right:clamp(18px,5.5%,70px);z-index:5;display:flex;align-items:center;gap:11px;flex-direction:row-reverse;text-align:right;animation:omFloat 7s ease-in-out infinite .6s">
+        <span style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:#cfd3d8"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block"><path d="M12 3l7 3v5c0 4.4-3 8-7 9-4-1-7-4.6-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px;align-items:flex-end"><span style="font-size:13px;font-weight:600;color:#e8eaed">Audit trail</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6a6f76">hash-chained</span></span>
+      </div>
+      <div style="position:absolute;bottom:clamp(72px,16%,150px);left:clamp(18px,5.5%,70px);z-index:5;display:flex;align-items:center;gap:11px;animation:omFloat 6.6s ease-in-out infinite .3s">
+        <span style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:#cfd3d8"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block"><path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 3v9l6 3"></path></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600;color:#e8eaed">Compliance</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6a6f76">KYC · AML · geo</span></span>
+      </div>
+      <div style="position:absolute;bottom:clamp(72px,18%,168px);right:clamp(18px,5.5%,70px);z-index:5;display:flex;align-items:center;gap:11px;flex-direction:row-reverse;text-align:right;animation:omFloat 7.4s ease-in-out infinite .9s">
+        <span style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:#cfd3d8"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block"><path d="M4 14l4-4 4 3 4-6 4 5"></path><path d="M4 19h16"></path></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px;align-items:flex-end"><span style="font-size:13px;font-weight:600;color:#e8eaed">Sportsbook</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6a6f76">live settlement</span></span>
+      </div>
+
+      <!-- center content -->
+      <div style="position:relative;z-index:6;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 clamp(18px,5vw,40px);max-width:900px">
+        <div data-anim="up" style="display:inline-flex;align-items:center;gap:9px;padding:6px 14px 6px 8px;border-radius:980px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:13px;font-weight:500;color:#c2c6cd;margin-bottom:26px">
+          <span style="display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:980px;background:rgba(111,231,166,.14);color:#7fe7b0;font-size:11px;font-weight:600;letter-spacing:.03em">v1.0</span>
+          Open core · MIT licensed · AI-native
+        </div>
+        <h1 data-anim="up" style="margin:0;font-size:clamp(44px,7.2vw,94px);line-height:.97;font-weight:600;letter-spacing:-.042em;background:linear-gradient(180deg,#ffffff 0%,#d4d8de 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent">
+          The real-money gaming<br>backend you actually own.
+        </h1>
+        <p data-anim="up" style="margin:26px auto 0;max-width:540px;font-size:clamp(17px,2vw,20px);line-height:1.5;font-weight:450;color:#9aa0a8">
+          A headless, fully typed iGaming platform. Clone it, extend it with plugins, and own your frontend — no forks, no lock-in.
+        </p>
+        <div data-anim="up" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-top:34px">
+          <a href="#docs" style="display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:980px;background:#f3f4f6;color:#0a0b0d;text-decoration:none;font-size:15.5px;font-weight:600;letter-spacing:-.01em" style-hover="background:#ffffff">Get started</a>
+          <a href="#code" style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:980px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:#e7eaee;text-decoration:none;font-size:15.5px;font-weight:500" style-hover="border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06)">See how it works</a>
+        </div>
+        <div data-anim="up" style="display:inline-flex;align-items:center;gap:12px;margin-top:22px;padding:8px 8px 8px 16px;border-radius:980px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);font-family:'JetBrains Mono',monospace;font-size:13px;color:#bcc1c8">
+          <span style="color:#7fe7b0">$</span><span>pnpm create omnia@latest</span>
+          <button onClick="{{ copyCmd }}" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:980px;border:none;background:rgba(255,255,255,.06);color:#cfd4da;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer" style-hover="background:rgba(255,255,255,.1)">
+            <sc-if value="{{ copied }}"><span style="color:#7fe7b0">copied</span></sc-if>
+            <sc-if value="{{ notCopied }}" hint-placeholder-val="{{ true }}"><span>copy</span></sc-if>
+          </button>
+        </div>
+      </div>
+
+      <!-- bottom indicators -->
+      <div style="position:absolute;left:clamp(18px,5.5%,70px);bottom:clamp(22px,5%,46px);z-index:5;display:flex;align-items:center;gap:11px;color:#71767d">
+        <span style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:#aeb3bb;animation:omNudge 2.4s ease-in-out infinite"><svg viewBox="0 0 24 24" width="14" height="14" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block"><path d="M12 5v14"></path><path d="M6 13l6 6 6-6"></path></svg></span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.04em">01 / 06 · scroll</span>
+      </div>
+      <div style="position:absolute;right:clamp(18px,5.5%,70px);bottom:clamp(22px,5%,46px);z-index:5;display:flex;align-items:center;gap:14px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.04em;color:#71767d">headless backend</span>
+        <span style="display:flex;gap:5px;align-items:center"><span style="width:22px;height:3px;border-radius:2px;background:#9aa0a8"></span><span style="width:8px;height:3px;border-radius:2px;background:rgba(255,255,255,.18)"></span><span style="width:8px;height:3px;border-radius:2px;background:rgba(255,255,255,.18)"></span></span>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ===================== PRODUCT MOCK ===================== -->
+  <section style="padding:clamp(40px,7vw,96px) clamp(20px,5vw,40px) clamp(20px,4vw,48px)">
+    <div data-anim="up" style="max-width:1080px;margin:0 auto">
+      <div style="position:relative;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(20,21,25,.9),rgba(12,13,16,.95));box-shadow:0 50px 130px -60px rgba(0,0,0,.9);overflow:hidden;text-align:left">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.05)">
+          <div style="display:flex;gap:7px"><span style="width:10px;height:10px;border-radius:50%;background:#2d3036"></span><span style="width:10px;height:10px;border-radius:50%;background:#2d3036"></span><span style="width:10px;height:10px;border-radius:50%;background:#2d3036"></span></div>
+          <div style="margin:0 auto;display:inline-flex;align-items:center;gap:8px;padding:4px 14px;border-radius:8px;background:rgba(255,255,255,.03);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#71767d"><span style="color:#7fe7b0">●</span> acme.gg/backoffice</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#4f555c;border:1px dashed rgba(255,255,255,.14);padding:2px 8px;border-radius:980px">your frontend</span>
+        </div>
+        <div style="display:flex;min-height:340px">
+          <div style="flex:none;width:188px;border-right:1px solid rgba(255,255,255,.04);padding:18px 14px;display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px"><span style="width:18px;height:18px;border-radius:5px;background:rgba(255,255,255,.14)"></span><span style="width:64px;height:9px;border-radius:5px;background:rgba(255,255,255,.14)"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,.06)"><span style="width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,.5)"></span><span style="width:78px;height:8px;border-radius:5px;background:rgba(255,255,255,.45)"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px"><span style="width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,.1)"></span><span style="width:92px;height:8px;border-radius:5px;background:rgba(255,255,255,.1)"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px"><span style="width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,.1)"></span><span style="width:70px;height:8px;border-radius:5px;background:rgba(255,255,255,.1)"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px"><span style="width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,.1)"></span><span style="width:84px;height:8px;border-radius:5px;background:rgba(255,255,255,.1)"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px"><span style="width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,.1)"></span><span style="width:58px;height:8px;border-radius:5px;background:rgba(255,255,255,.1)"></span></div>
+          </div>
+          <div style="flex:1;padding:20px 22px;display:flex;flex-direction:column;gap:16px;min-width:0">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="width:160px;height:13px;border-radius:6px;background:rgba(255,255,255,.16)"></span><span style="width:96px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)"></span></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="padding:14px;border-radius:11px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;gap:10px"><span style="width:54px;height:7px;border-radius:4px;background:rgba(255,255,255,.12)"></span><span style="width:78px;height:18px;border-radius:5px;background:rgba(255,255,255,.2)"></span><span style="width:40px;height:7px;border-radius:4px;background:rgba(111,231,166,.5)"></span></div>
+              <div style="padding:14px;border-radius:11px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;gap:10px"><span style="width:54px;height:7px;border-radius:4px;background:rgba(255,255,255,.12)"></span><span style="width:88px;height:18px;border-radius:5px;background:rgba(255,255,255,.2)"></span><span style="width:34px;height:7px;border-radius:4px;background:rgba(111,231,166,.5)"></span></div>
+              <div style="padding:14px;border-radius:11px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);display:flex;flex-direction:column;gap:10px"><span style="width:54px;height:7px;border-radius:4px;background:rgba(255,255,255,.12)"></span><span style="width:66px;height:18px;border-radius:5px;background:rgba(255,255,255,.2)"></span><span style="width:46px;height:7px;border-radius:4px;background:rgba(150,186,255,.5)"></span></div>
+            </div>
+            <div style="flex:1;min-height:120px;border-radius:11px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.012);padding:16px;display:flex;align-items:flex-end;gap:9px">
+              <span style="flex:1;height:36%;border-radius:5px 5px 0 0;background:rgba(255,255,255,.08)"></span>
+              <span style="flex:1;height:58%;border-radius:5px 5px 0 0;background:rgba(255,255,255,.1)"></span>
+              <span style="flex:1;height:44%;border-radius:5px 5px 0 0;background:rgba(255,255,255,.08)"></span>
+              <span style="flex:1;height:72%;border-radius:5px 5px 0 0;background:rgba(111,231,166,.4)"></span>
+              <span style="flex:1;height:52%;border-radius:5px 5px 0 0;background:rgba(255,255,255,.1)"></span>
+              <span style="flex:1;height:84%;border-radius:5px 5px 0 0;background:rgba(111,231,166,.55)"></span>
+              <span style="flex:1;height:64%;border-radius:5px 5px 0 0;background:rgba(255,255,255,.1)"></span>
+              <span style="flex:1;height:48%;border-radius:5px 5px 0 0;background:rgba(255,255,255,.08)"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="margin:18px auto 0;max-width:520px;text-align:center;font-size:14px;line-height:1.5;color:#6c7178">An example backoffice built on Omnia. The platform stays headless — every pixel of the frontend is yours.</p>
+    </div>
+  </section>
+
+  <!-- ===================== CODE PANEL ===================== -->
+  <section id="code" style="padding:clamp(24px,4vw,48px) clamp(20px,5vw,40px) clamp(56px,8vw,96px)">
+    <div style="max-width:980px;margin:0 auto">
+      <div data-anim="up" style="border-radius:18px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(18,19,23,.9),rgba(11,12,15,.95));box-shadow:0 30px 80px -40px rgba(0,0,0,.8);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.06)">
+          <div style="display:flex;gap:7px">
+            <span style="width:11px;height:11px;border-radius:50%;background:#2d3036"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#2d3036"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#2d3036"></span>
+          </div>
+          <div style="display:flex;gap:4px;margin-left:6px">
+            <button onClick="{{ setScaffold }}" style="padding:6px 13px;border-radius:8px;border:none;background:{{ scaffoldBg }};color:{{ scaffoldFg }};font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer">scaffold</button>
+            <button onClick="{{ setPlugin }}" style="padding:6px 13px;border-radius:8px;border:none;background:{{ pluginBg }};color:{{ pluginFg }};font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer">plugin</button>
+            <button onClick="{{ setSdk }}" style="padding:6px 13px;border-radius:8px;border:none;background:{{ sdkBg }};color:{{ sdkFg }};font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer">typed sdk</button>
+          </div>
+          <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px;color:#565c63">{{ fileLabel }}</span>
+        </div>
+        <div style="padding:22px clamp(16px,3vw,28px);overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.85">
+
+          <sc-if value="{{ isScaffold }}" hint-placeholder-val="{{ true }}">
+          <pre style="margin:0;white-space:pre;color:#cdd2d8"><span style="color:#7fe7b0">$</span> pnpm create <span style="color:#9bd1ff">omnia@latest</span> acme-gaming
+
+<span style="color:#7fe7b0">◇</span>  Modules    <span style="color:#71767d">casino · wallet · sportsbook · compliance</span>
+<span style="color:#7fe7b0">◇</span>  Database   <span style="color:#71767d">postgres</span>
+<span style="color:#7fe7b0">◇</span>  Topology   <span style="color:#71767d">modular-monolith</span>
+<span style="color:#7fe7b0">◇</span>  Frontend   <span style="color:#71767d">bring-your-own</span>
+
+<span style="color:#7fe7b0">✔</span>  Scaffolded <span style="color:#e6cf8a">14</span> modules · typed SDK · <span style="color:#e6cf8a">3.1s</span>
+
+<span style="color:#7fe7b0">$</span> pnpm omnia scaffold module <span style="color:#9bd1ff">loyalty</span>
+
+<span style="color:#7fe7b0">✔</span>  apps/api/src/modules/loyalty
+   <span style="color:#7fe7b0">├─</span> loyalty.contract.ts   <span style="color:#565c63"># zod + oRPC contract</span>
+   <span style="color:#7fe7b0">├─</span> loyalty.service.ts    <span style="color:#565c63"># business logic</span>
+   <span style="color:#7fe7b0">├─</span> loyalty.plugin.ts     <span style="color:#565c63"># definePlugin host</span>
+   <span style="color:#7fe7b0">├─</span> loyalty.test.ts       <span style="color:#565c63"># vitest</span>
+   <span style="color:#7fe7b0">└─</span> AGENTS.md             <span style="color:#565c63"># agent playbook</span>
+
+<span style="color:#7fe7b0">→</span>  registered with plugin host · <span style="color:#e6cf8a">0</span> files forked<span style="display:inline-block;width:9px;height:16px;margin-left:3px;background:#7fe7b0;vertical-align:-3px;animation:omBlink 1.1s step-end infinite"></span></pre>
+          </sc-if>
+
+          <sc-if value="{{ isPlugin }}">
+          <pre style="margin:0;white-space:pre;color:#cdd2d8"><span style="color:#c9a8ff">import</span> { definePlugin } <span style="color:#c9a8ff">from</span> <span style="color:#8ce99a">'@omnia/core'</span>
+<span style="color:#c9a8ff">import</span> { loyaltyContract } <span style="color:#c9a8ff">from</span> <span style="color:#8ce99a">'./loyalty.contract'</span>
+
+<span style="color:#c9a8ff">export default</span> <span style="color:#6cb8ff">definePlugin</span>({
+  name: <span style="color:#8ce99a">'loyalty'</span>,
+  contract: loyaltyContract,
+  <span style="color:#6cb8ff">register</span>({ wallet, audit, bus }) {
+    <span style="color:#565c63">// earn points on every settled bet</span>
+    bus.<span style="color:#6cb8ff">on</span>(<span style="color:#8ce99a">'bet.settled'</span>, <span style="color:#c9a8ff">async</span> (e) => {
+      <span style="color:#c9a8ff">const</span> points = Math.<span style="color:#6cb8ff">floor</span>(e.stake * <span style="color:#e6cf8a">0.1</span>)
+      <span style="color:#c9a8ff">await</span> wallet.<span style="color:#6cb8ff">credit</span>(e.userId, points, <span style="color:#8ce99a">'loyalty'</span>)
+      <span style="color:#c9a8ff">await</span> audit.<span style="color:#6cb8ff">append</span>(<span style="color:#8ce99a">'loyalty.granted'</span>, { ...e, points })
+    })
+  },
+})</pre>
+          </sc-if>
+
+          <sc-if value="{{ isSdk }}">
+          <pre style="margin:0;white-space:pre;color:#cdd2d8"><span style="color:#c9a8ff">import</span> { createClient } <span style="color:#c9a8ff">from</span> <span style="color:#8ce99a">'@omnia/sdk'</span>
+<span style="color:#c9a8ff">import type</span> { AppRouter } <span style="color:#c9a8ff">from</span> <span style="color:#8ce99a">'../api'</span>
+
+<span style="color:#c9a8ff">const</span> omnia = <span style="color:#6cb8ff">createClient</span>&lt;AppRouter&gt;({
+  url: <span style="color:#8ce99a">'https://api.acme.gg'</span>,
+  token: session.accessToken,
+})
+
+<span style="color:#565c63">// fully inferred — no codegen, no any</span>
+<span style="color:#c9a8ff">const</span> { balance } = <span style="color:#c9a8ff">await</span> omnia.wallet.balance.<span style="color:#6cb8ff">query</span>()
+<span style="color:#565c63">//      ^? Money</span>
+
+<span style="color:#c9a8ff">await</span> omnia.bonus.claim.<span style="color:#6cb8ff">mutate</span>({ code: <span style="color:#8ce99a">'WELCOME100'</span> })
+<span style="color:#565c63">//                       ^? { ok: true; granted: Money }</span></pre>
+          </sc-if>
+
+        </div>
+      </div>
+      <p style="margin:18px auto 0;max-width:620px;text-align:center;font-size:15px;line-height:1.5;color:#7c818a">Contract, service, plugin, tests and an agent playbook — generated in one pass, registered with the plugin host, zero files forked.</p>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURES ===================== -->
+  <section id="features" style="padding:clamp(64px,9vw,116px) clamp(20px,5vw,40px);border-top:1px solid rgba(255,255,255,.05)">
+    <div style="max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="max-width:640px;margin-bottom:clamp(40px,5vw,64px)">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>ARCHITECTURE</div>
+        <h2 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.05;font-weight:600;letter-spacing:-.034em;color:#f4f5f7">Built like infrastructure,<br>not a starter kit.</h2>
+        <p style="margin:20px 0 0;font-size:18px;line-height:1.55;color:#9298a0">Every decision optimizes for the same thing: you extend the platform without ever forking it.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#565c63">01</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b9099;border:1px solid rgba(255,255,255,.08);padding:3px 9px;border-radius:980px">contracts</span>
+          </div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Typed end to end</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Zod-first contracts compile to an oRPC + Hono API and a fully inferred SDK. No codegen, no drift, no <span style="font-family:'JetBrains Mono',monospace;color:#bcc1c8">any</span>.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#565c63">02</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b9099;border:1px solid rgba(255,255,255,.08);padding:3px 9px;border-radius:980px">extensibility</span>
+          </div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Plugin host</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Everything extends through <span style="font-family:'JetBrains Mono',monospace;color:#bcc1c8">definePlugin</span>. Register modules, listen on the event bus, override adapters — without forking a single file.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#565c63">03</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b9099;border:1px solid rgba(255,255,255,.08);padding:3px 9px;border-radius:980px">topology</span>
+          </div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Monolith → microservices</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Run as one deployable today; split modules into independent services later — with zero module-code change.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#565c63">04</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b9099;border:1px solid rgba(255,255,255,.08);padding:3px 9px;border-radius:980px">agents</span>
+          </div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">AI-native by design</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Every module ships an <span style="font-family:'JetBrains Mono',monospace;color:#bcc1c8">AGENTS.md</span>, scaffold commands and an MCP dev server, so agents read, write and extend your codebase safely.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#565c63">05</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b9099;border:1px solid rgba(255,255,255,.08);padding:3px 9px;border-radius:980px">reliability</span>
+          </div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Production built in</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Hash-chained audit trail, transactional outbox, idempotency keys, and ports/adapters for every PSP, KYC and aggregator.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#565c63">06</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b9099;border:1px solid rgba(255,255,255,.08);padding:3px 9px;border-radius:980px">license</span>
+          </div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Open core, MIT</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Clone the repo, own every line, ship on your own infra. No seat pricing, no lock-in, no black boxes.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HOW IT WORKS ===================== -->
+  <section style="padding:clamp(64px,9vw,116px) clamp(20px,5vw,40px);background:#08090b;border-top:1px solid rgba(255,255,255,.05)">
+    <div style="max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="text-align:center;max-width:620px;margin:0 auto clamp(44px,5vw,64px)">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>HOW IT WORKS</div>
+        <h2 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.05;font-weight:600;letter-spacing:-.034em;color:#f4f5f7">Three steps to a platform.</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
+
+        <div data-anim="up" style="position:relative;padding:30px 28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8b9099;margin-bottom:18px">01 / clone</div>
+          <div style="display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:10px;background:#0c0e10;border:1px solid rgba(255,255,255,.07);font-family:'JetBrains Mono',monospace;font-size:13px;color:#d8dde2;margin-bottom:18px"><span style="color:#7fe7b0">$</span> pnpm create omnia@latest</div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Start fully featured</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Auth, wallet, lobby, bonus engine, compliance, backoffice and sportsbook — running locally in minutes.</p>
+        </div>
+
+        <div data-anim="up" style="position:relative;padding:30px 28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8b9099;margin-bottom:18px">02 / extend</div>
+          <div style="display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:10px;background:#0c0e10;border:1px solid rgba(255,255,255,.07);font-family:'JetBrains Mono',monospace;font-size:13px;color:#d8dde2;margin-bottom:18px"><span style="color:#c9a8ff">definePlugin</span>({ … })</div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Add your own logic</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">New modules, rules and vendors arrive as plugins on the typed event bus. Nothing forked, everything tracked.</p>
+        </div>
+
+        <div data-anim="up" style="position:relative;padding:30px 28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8b9099;margin-bottom:18px">03 / ship</div>
+          <div style="display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:10px;background:#0c0e10;border:1px solid rgba(255,255,255,.07);font-family:'JetBrains Mono',monospace;font-size:13px;color:#d8dde2;margin-bottom:18px">omnia.<span style="color:#6cb8ff">wallet</span>.balance</div>
+          <h3 style="margin:0 0 9px;font-size:20px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">Own the frontend</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Build any experience over a fully inferred SDK. Web, native, kiosk — Omnia stays headless, you own the UI.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MODULES ===================== -->
+  <section id="modules" style="padding:clamp(64px,9vw,116px) clamp(20px,5vw,40px);border-top:1px solid rgba(255,255,255,.05)">
+    <div style="max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="max-width:640px;margin-bottom:clamp(40px,5vw,56px)">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>BATTERIES INCLUDED</div>
+        <h2 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.05;font-weight:600;letter-spacing:-.034em;color:#f4f5f7">Every domain ships<br>on day one.</h2>
+        <p style="margin:20px 0 0;font-size:18px;line-height:1.55;color:#9298a0">Twelve production modules, each a typed contract behind the plugin host. Use them, override them, or swap their adapters.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px">
+        <sc-for list="{{ modules }}" as="m" hint-placeholder-count="12">
+          <div data-anim="up" style="padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)" style-hover="border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.035)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <span style="font-size:16px;font-weight:600;letter-spacing:-.01em;color:#ecedef">{{ m.name }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#71767d;border:1px solid rgba(255,255,255,.08);padding:2px 7px;border-radius:980px">{{ m.tag }}</span>
+            </div>
+            <p style="margin:0;font-size:13.5px;line-height:1.5;color:#838992">{{ m.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== AI-NATIVE ===================== -->
+  <section id="ai" style="position:relative;padding:clamp(64px,9vw,120px) clamp(20px,5vw,40px);background:#08090b;border-top:1px solid rgba(255,255,255,.05);overflow:hidden">
+    <div style="position:relative;max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="text-align:center;max-width:680px;margin:0 auto clamp(44px,5vw,60px)">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>AI-NATIVE</div>
+        <h2 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.05;font-weight:600;letter-spacing:-.034em;color:#f4f5f7">A codebase agents<br>can actually work in.</h2>
+        <p style="margin:20px auto 0;max-width:560px;font-size:18px;line-height:1.55;color:#9298a0">Omnia treats AI agents as first-class contributors. The structure that keeps humans safe keeps agents safe too.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start">
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8b9099;margin-bottom:16px">AGENTS.md</div>
+          <h3 style="margin:0 0 9px;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">A playbook per module</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Domain rules, contracts, invariants and safe edit boundaries — written for the agent before it touches a line.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8b9099;margin-bottom:16px">scaffold</div>
+          <h3 style="margin:0 0 9px;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">One command, full module</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0"><span style="font-family:'JetBrains Mono',monospace;color:#bcc1c8">omnia scaffold module</span> generates contract, service, plugin, tests and docs in a single, agent-friendly pass.</p>
+        </div>
+
+        <div data-anim="up" style="padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8b9099;margin-bottom:16px">mcp</div>
+          <h3 style="margin:0 0 9px;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f0f1f3">MCP dev server</h3>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:#9298a0">Point Claude or Cursor at the MCP server to inspect schemas, run migrations and extend modules within guardrails.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LICENSE-GRADE BAND ===================== -->
+  <section style="padding:clamp(64px,9vw,116px) clamp(20px,5vw,40px);border-top:1px solid rgba(255,255,255,.05)">
+    <div style="max-width:1120px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
+        <div data-anim="left">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>LICENSE-GRADE</div>
+          <h2 style="margin:0;font-size:clamp(28px,3.8vw,46px);line-height:1.1;font-weight:600;letter-spacing:-.032em;color:#f4f5f7">Built for operators who need a license-grade backend.</h2>
+          <p style="margin:20px 0 0;font-size:18px;line-height:1.55;color:#9298a0">Omnia ships the controls auditors ask for — in the core, not bolted on.</p>
+        </div>
+        <div data-anim="right" style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:14px;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+            <span style="flex:none;width:8px;height:8px;border-radius:50%;background:#6fe7a6;margin-top:7px"></span>
+            <div><div style="font-size:16px;font-weight:600;color:#ecedef;margin-bottom:4px">Hash-chained audit trail</div><div style="font-size:14.5px;line-height:1.5;color:#838992">Every state change is append-only and tamper-evident, end to end.</div></div>
+          </div>
+          <div style="display:flex;gap:14px;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+            <span style="flex:none;width:8px;height:8px;border-radius:50%;background:#6fe7a6;margin-top:7px"></span>
+            <div><div style="font-size:16px;font-weight:600;color:#ecedef;margin-bottom:4px">Compliance &amp; responsible gaming</div><div style="font-size:14.5px;line-height:1.5;color:#838992">KYC/AML, geo, limits, self-exclusion and reporting hooks, ready for your jurisdiction.</div></div>
+          </div>
+          <div style="display:flex;gap:14px;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+            <span style="flex:none;width:8px;height:8px;border-radius:50%;background:#6fe7a6;margin-top:7px"></span>
+            <div><div style="font-size:16px;font-weight:600;color:#ecedef;margin-bottom:4px">Ports &amp; adapters for every vendor</div><div style="font-size:14.5px;line-height:1.5;color:#838992">Swap PSPs, KYC providers and game aggregators behind certification-friendly interfaces.</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(44px,5vw,64px);padding-top:clamp(32px,4vw,48px);border-top:1px solid rgba(255,255,255,.06)">
+        <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:#565c63;margin-bottom:24px">OPERATORS BUILDING ON OMNIA</div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px">
+          <sc-for list="{{ logos }}" as="l" hint-placeholder-count="5">
+            <div data-anim="scale" style="flex:none;width:140px;height:46px;border-radius:10px;border:1px dashed rgba(255,255,255,.1);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4f555c">{{ l }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIALS ===================== -->
+  <section id="testimonials" style="padding:clamp(64px,9vw,116px) clamp(20px,5vw,40px);background:#08090b;border-top:1px solid rgba(255,255,255,.05)">
+    <div style="max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="max-width:640px;margin:0 auto clamp(44px,5vw,60px)">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>CUSTOMERS</div>
+        <h2 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.05;font-weight:600;letter-spacing:-.034em;color:#f4f5f7">Engineers who shipped<br>real-money products on it.</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)">
+          <div style="display:flex;gap:16px;width:max-content;animation:omMarqueeL 56s linear infinite" style-hover="animation-play-state:paused">
+            <sc-for list="{{ rowA }}" as="t" hint-placeholder-count="8">
+              <figure style="margin:0;flex:none;width:368px;display:flex;flex-direction:column;padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+                <blockquote style="margin:0;flex:1;font-size:16px;line-height:1.55;letter-spacing:-.01em;color:#d6dade">“{{ t.quote }}”</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06)">
+                  <span style="flex:none;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;font-size:13px;font-weight:600;color:#cfd3d8">{{ t.initials }}</span>
+                  <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600;color:#f0f1f3">{{ t.name }}</span><span style="font-size:12.5px;color:#838992">{{ t.role }}</span></span>
+                </figcaption>
+              </figure>
+            </sc-for>
+          </div>
+        </div>
+        <div style="position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)">
+          <div style="display:flex;gap:16px;width:max-content;animation:omMarqueeR 68s linear infinite" style-hover="animation-play-state:paused">
+            <sc-for list="{{ rowB }}" as="t" hint-placeholder-count="8">
+              <figure style="margin:0;flex:none;width:368px;display:flex;flex-direction:column;padding:28px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+                <blockquote style="margin:0;flex:1;font-size:16px;line-height:1.55;letter-spacing:-.01em;color:#d6dade">“{{ t.quote }}”</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06)">
+                  <span style="flex:none;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;font-size:13px;font-weight:600;color:#cfd3d8">{{ t.initials }}</span>
+                  <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600;color:#f0f1f3">{{ t.name }}</span><span style="font-size:12.5px;color:#838992">{{ t.role }}</span></span>
+                </figcaption>
+              </figure>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PRICING ===================== -->
+  <section id="pricing" style="position:relative;padding:clamp(64px,9vw,120px) clamp(20px,5vw,40px);border-top:1px solid rgba(255,255,255,.05);overflow:hidden">
+    <div style="position:relative;max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="text-align:center;max-width:640px;margin:0 auto clamp(44px,5vw,60px)">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;color:#7c818a;margin-bottom:18px"><span style="width:6px;height:6px;border-radius:50%;background:#6fe7a6"></span>PRICING</div>
+        <h2 style="margin:0;font-size:clamp(30px,4.4vw,52px);line-height:1.05;font-weight:600;letter-spacing:-.034em;color:#f4f5f7">Open core. Pay only for what you don't want to run.</h2>
+        <p style="margin:20px auto 0;max-width:520px;font-size:18px;line-height:1.55;color:#9298a0">The platform is MIT and free forever. Tiers add hosting, support and certification help — never feature locks.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;align-items:stretch">
+
+        <div data-anim="up" style="display:flex;flex-direction:column;padding:30px 28px;border-radius:20px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-size:14px;font-weight:600;letter-spacing:-.01em;color:#ecedef">Open Source</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:16px 0 6px"><span style="font-size:44px;font-weight:600;letter-spacing:-.03em;color:#f4f5f7">$0</span><span style="font-size:15px;color:#838992">forever</span></div>
+          <p style="margin:0 0 22px;font-size:14px;line-height:1.5;color:#838992">Clone it, own it, self-host. The full platform under MIT.</p>
+          <a href="#docs" style="display:inline-flex;align-items:center;justify-content:center;padding:11px;border-radius:980px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:#ecedef;text-decoration:none;font-size:14.5px;font-weight:550;margin-bottom:24px" style-hover="border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06)">Clone the repo</a>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ tierFree }}" as="f" hint-placeholder-count="5"><div style="display:flex;gap:11px;font-size:14px;line-height:1.45;color:#b1b6bd"><span style="flex:none;color:#6fe7a6;margin-top:1px">✓</span><span>{{ f }}</span></div></sc-for>
+          </div>
+        </div>
+
+        <div data-anim="up" style="position:relative;display:flex;flex-direction:column;padding:30px 28px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))">
+          <div style="position:absolute;top:18px;right:18px;font-size:11px;font-weight:600;letter-spacing:.04em;color:#0a0b0d;background:#6fe7a6;padding:4px 10px;border-radius:980px">POPULAR</div>
+          <div style="font-size:14px;font-weight:600;letter-spacing:-.01em;color:#ecedef">Cloud</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:16px 0 6px"><span style="font-size:44px;font-weight:600;letter-spacing:-.03em;color:#f4f5f7">$499</span><span style="font-size:15px;color:#838992">/mo</span></div>
+          <p style="margin:0 0 22px;font-size:14px;line-height:1.5;color:#9298a0">Managed hosting that scales from monolith to services — without touching your code.</p>
+          <a href="#start" style="display:inline-flex;align-items:center;justify-content:center;padding:11px;border-radius:980px;background:#f3f4f6;color:#0a0b0d;text-decoration:none;font-size:14.5px;font-weight:600;margin-bottom:24px" style-hover="background:#ffffff">Start free trial</a>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ tierCloud }}" as="f" hint-placeholder-count="5"><div style="display:flex;gap:11px;font-size:14px;line-height:1.45;color:#c4c9cf"><span style="flex:none;color:#6fe7a6;margin-top:1px">✓</span><span>{{ f }}</span></div></sc-for>
+          </div>
+        </div>
+
+        <div data-anim="up" style="display:flex;flex-direction:column;padding:30px 28px;border-radius:20px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.022)">
+          <div style="font-size:14px;font-weight:600;letter-spacing:-.01em;color:#ecedef">Enterprise</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:16px 0 6px"><span style="font-size:44px;font-weight:600;letter-spacing:-.03em;color:#f4f5f7">Custom</span></div>
+          <p style="margin:0 0 22px;font-size:14px;line-height:1.5;color:#838992">License-grade support, dedicated infra and certification partnership.</p>
+          <a href="#" style="display:inline-flex;align-items:center;justify-content:center;padding:11px;border-radius:980px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:#ecedef;text-decoration:none;font-size:14.5px;font-weight:550;margin-bottom:24px" style-hover="border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06)">Talk to us</a>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ tierEnterprise }}" as="f" hint-placeholder-count="5"><div style="display:flex;gap:11px;font-size:14px;line-height:1.45;color:#b1b6bd"><span style="flex:none;color:#6fe7a6;margin-top:1px">✓</span><span>{{ f }}</span></div></sc-for>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FINAL CTA ===================== -->
+  <section id="start" style="position:relative;padding:clamp(48px,7vw,80px) clamp(12px,2.4vw,28px);border-top:1px solid rgba(255,255,255,.05)">
+    <div data-anim="up" style="position:relative;max-width:1180px;margin:0 auto;border-radius:clamp(20px,2.4vw,30px);border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,#0b0c0f,#08090b);overflow:hidden;text-align:center;padding:clamp(64px,9vw,120px) clamp(20px,5vw,40px)">
+      <div style="position:absolute;bottom:-40%;left:50%;width:min(900px,110%);height:560px;transform:translateX(-50%);pointer-events:none;background:radial-gradient(ellipse 50% 50% at 50% 100%, rgba(111,231,166,.16), transparent 66%), radial-gradient(ellipse 40% 50% at 60% 90%, rgba(214,236,224,.1), transparent 70%);filter:blur(12px)"></div>
+      <div style="position:relative;max-width:720px;margin:0 auto">
+        <h2 style="margin:0;font-size:clamp(34px,5.4vw,66px);line-height:1.03;font-weight:600;letter-spacing:-.036em;background:linear-gradient(180deg,#ffffff,#d4d8de);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent">Clone it. Extend it.<br>Own it.</h2>
+        <p style="margin:22px auto 0;max-width:520px;font-size:18px;line-height:1.55;color:#9aa0a8">A license-grade iGaming backend, fully typed and AI-native — open from the first commit.</p>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-top:34px">
+          <a href="#docs" style="display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:980px;background:#f3f4f6;color:#0a0b0d;text-decoration:none;font-size:16px;font-weight:600;letter-spacing:-.01em" style-hover="background:#ffffff">Get started</a>
+          <a href="#" style="display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:980px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:#e7eaee;text-decoration:none;font-size:16px;font-weight:500" style-hover="border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06)"><span style="color:#6fe7a6">★</span> Star on GitHub · {{ stars }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer id="docs" style="padding:clamp(48px,6vw,72px) clamp(20px,5vw,40px) 40px;border-top:1px solid rgba(255,255,255,.06);background:#070809">
+    <div style="max-width:1120px;margin:0 auto">
+      <div data-anim="up" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:40px 24px">
+        <div style="min-width:200px">
+          <a href="#top" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:14px">
+            <span style="width:26px;height:26px;border-radius:8px;background:#0e0f12;border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:#f3f4f6;font:700 13px/1 'DM Sans',sans-serif">O</span>
+            <span style="font-size:17px;font-weight:600;letter-spacing:-.02em;color:#f5f6f8">Omnia</span>
+          </a>
+          <p style="margin:0;max-width:260px;font-size:14px;line-height:1.55;color:#71767d">The headless, AI-native iGaming platform. Open core, MIT licensed.</p>
+        </div>
+        <div>
+          <div style="font-size:12.5px;font-weight:600;letter-spacing:.04em;color:#62666d;margin-bottom:14px">PRODUCT</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:14.5px;color:#9aa0a8">
+            <a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Docs</a><a href="#modules" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Modules</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Typed SDK</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Changelog</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12.5px;font-weight:600;letter-spacing:.04em;color:#62666d;margin-bottom:14px">DEVELOP</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:14.5px;color:#9aa0a8">
+            <a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">GitHub</a><a href="#ai" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">AGENTS.md</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">MCP server</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Roadmap</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12.5px;font-weight:600;letter-spacing:.04em;color:#62666d;margin-bottom:14px">COMMUNITY</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:14.5px;color:#9aa0a8">
+            <a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Discord</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Discussions</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">X / Twitter</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Contributing</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12.5px;font-weight:600;letter-spacing:.04em;color:#62666d;margin-bottom:14px">LEGAL</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:14.5px;color:#9aa0a8">
+            <a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">MIT License</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Security</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Compliance</a><a href="#" style="text-decoration:none;color:inherit" style-hover="color:#f3f4f6">Status</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);font-size:13px;color:#62666d">
+        <span>© 2026 Omnia. Released under the MIT License.</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px">main · v1.0.0</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:&quot;auto&quot;}}">
+class Component extends DCLogic {
+  state = { tab: 'scaffold', copied: false };
+
+  copy(text) {
+    try { navigator.clipboard.writeText(text); } catch (e) {}
+    this.setState({ copied: true });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ copied: false }), 1600);
+  }
+
+  componentDidMount() {
+    this._syncNav();
+    this._onResize = () => this._syncNav();
+    window.addEventListener('resize', this._onResize);
+    // Entrance animation is handled by CSS ([data-anim] -> omRise) so it can never
+    // leave content hidden when the framework re-applies inline styles on re-render.
+  }
+
+  _syncNav() {
+    const pill = document.querySelector('[data-navpill]');
+    if (pill) pill.style.display = window.innerWidth >= 880 ? 'flex' : 'none';
+  }
+
+  componentWillUnmount() {
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+    clearTimeout(this._t);
+  }
+
+  renderVals() {
+    const tab = this.state.tab;
+    const testimonials = [
+      { quote: 'We replaced a forked vendor platform with Omnia in a quarter. Our risk rules now live in our repo, behind the plugin host — not in someone else\u2019s black box.', name: 'Marcus Vael', role: 'CTO, real-money gaming startup', initials: 'MV' },
+      { quote: 'End-to-end types caught wallet bugs before they ever reached staging. Onboarding a new engineer went from weeks to a couple of days.', name: 'Priya Anand', role: 'Staff Engineer, Platform', initials: 'PA' },
+      { quote: 'The hash-chained audit trail and adapter ports got us through licensing review without building a custom compliance layer. That alone paid for the migration.', name: 'Daniel Roth', role: 'Founder & CEO', initials: 'DR' },
+      { quote: 'Our agents scaffold modules against each AGENTS.md and actually respect the contracts. It\u2019s the first codebase that feels built for working alongside AI.', name: 'Sofia Lindqvist', role: 'Head of Platform Engineering', initials: 'SL' },
+    ];
+    const on = '#7fe7b0', off = 'rgba(255,255,255,.5)';
+    const onBg = 'rgba(255,255,255,.08)', offBg = 'transparent';
+    const fileLabels = { scaffold: 'terminal', plugin: 'loyalty.plugin.ts', sdk: 'client.ts' };
+    return {
+      isScaffold: tab === 'scaffold',
+      isPlugin: tab === 'plugin',
+      isSdk: tab === 'sdk',
+      setScaffold: () => this.setState({ tab: 'scaffold' }),
+      setPlugin: () => this.setState({ tab: 'plugin' }),
+      setSdk: () => this.setState({ tab: 'sdk' }),
+      scaffoldBg: tab === 'scaffold' ? onBg : offBg,
+      scaffoldFg: tab === 'scaffold' ? on : off,
+      pluginBg: tab === 'plugin' ? onBg : offBg,
+      pluginFg: tab === 'plugin' ? on : off,
+      sdkBg: tab === 'sdk' ? onBg : offBg,
+      sdkFg: tab === 'sdk' ? on : off,
+      fileLabel: fileLabels[tab],
+      copyCmd: () => this.copy('pnpm create omnia@latest'),
+      copied: this.state.copied,
+      notCopied: !this.state.copied,
+      stars: '4.2k',
+      modules: [
+        { name: 'Auth', tag: 'core', desc: 'Sessions, MFA, RBAC and API keys out of the box.' },
+        { name: 'Wallet', tag: 'core', desc: 'Multi-currency, double-entry ledger with idempotency.' },
+        { name: 'Lobby', tag: 'core', desc: 'Game catalog, search, jackpots and presence.' },
+        { name: 'Chat', tag: 'module', desc: 'Tables, support and moderation channels.' },
+        { name: 'Bonus Engine', tag: 'core', desc: 'Rules, wagering, free spins and campaigns.' },
+        { name: 'Compliance', tag: 'core', desc: 'KYC/AML orchestration, geo and reporting.' },
+        { name: 'KYC / AML', tag: 'adapter', desc: 'Pluggable verification and screening vendors.' },
+        { name: 'Responsible Gaming', tag: 'core', desc: 'Limits, timeouts and self-exclusion controls.' },
+        { name: 'Backoffice', tag: 'core', desc: 'Operations, risk and payments tooling.' },
+        { name: 'CMS', tag: 'module', desc: 'Content, promotions and localization.' },
+        { name: 'Game Aggregator', tag: 'adapter', desc: 'Provider integrations behind one RGS port.' },
+        { name: 'Sportsbook', tag: 'module', desc: 'Markets, odds feeds and settlement.' },
+      ],
+      logos: ['OPERATOR', 'STUDIO', 'CASINO·CO', 'BETLABS', 'PLAY/X'],
+      rowA: testimonials.concat(testimonials),
+      rowB: [testimonials[2], testimonials[0], testimonials[3], testimonials[1]].concat([testimonials[2], testimonials[0], testimonials[3], testimonials[1]]),
+      tierFree: ['All 12 production modules', 'Plugin host & typed SDK', 'MCP dev server & scaffolding', 'Self-host on any infra', 'Community Discord'],
+      tierCloud: ['Everything in Open Source', 'Managed, autoscaling hosting', 'Monolith \u2192 microservices, zero-config', 'Audit & compliance export', 'Email support, 1-day SLA'],
+      tierEnterprise: ['Everything in Cloud', 'Dedicated infra & SSO/SAML', 'Certification & licensing support', 'Custom adapters & onboarding', '24/7 priority support, 99.99% SLA'],
+    };
+  }
+}
+</script>
+</body>
+</html>
